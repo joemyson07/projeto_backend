@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 namespace AplicacaoBackAula.Controllers
 {
 
-    [Route("api[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ProdutoItemController : ControllerBase
     {
@@ -20,7 +20,7 @@ namespace AplicacaoBackAula.Controllers
             //instancia do atributo _context
             _context = context;
         }
-
+        [HttpGet]
 
         public async Task<ActionResult<IEnumerable<Produto>>> GetProdutos()
         {
