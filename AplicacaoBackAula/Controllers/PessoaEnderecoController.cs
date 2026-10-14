@@ -120,5 +120,54 @@ namespace AplicacaoBackAula.Controllers
                 new { id = ObjPessoa.Idpessoa }, respostaBd);
         }
 
+        [HttpPut("{id}")]
+
+        public async Task<ActionResult<IActionResult>> Put(int id, PessoaDTO dTO)
+        {
+            var pessoa = await _context.Pessoas
+                .Include(p => p.Enderecos)
+                .FirstOrDefaultAsync(p => p.Idpessoa == id);
+
+            if (pessoa == null)
+            {
+                return NotFound();
+            }
+
+            pessoa.Nome = dTO.Nome;
+            pessoa.Cpf = dTO.cpf;
+            pessoa.DataNascimento = dTO.DataNascimento;
+            pessoa.Sexo = dTO.sexo;
+            pessoa.Email = dTO.email;
+            pessoa.Telefone = dTO.telefone;
+            pessoa.AtivoPessoa = dTO.AtivoPessoa;
+
+            foreach(var endPessoa in dTO.Enderecos)
+            {
+                if (endPessoa.IdPessoa > 0)
+                {
+                    var endereco = pessoa.Enderecos
+                        .FirstOrDefault(e => e.Idpessoa == endPessoa.IdPessoa);
+
+                    if (endereco == null)
+                    {
+                        return BadRequest($"O endereço não pertence a essa pessoa");
+                    }
+
+                    endereco.Numero = endPessoa.Numero;
+                    endereco.Cep = endPessoa.CEP;
+                    endereco.Complemento = endPessoa.Complemento;
+                }
+                else
+                {
+                    pessoa.Enderecos.Add(new Endereco
+                    {
+                        Numero = endPessoa.Numero,
+                        Cep = endPessoa.CEP,
+                        Complemento = endPessoa.Complemento
+                    });
+                }
+            }
+        }
+
     }
 }
