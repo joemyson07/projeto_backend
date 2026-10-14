@@ -121,7 +121,7 @@ namespace AplicacaoBackAula.Controllers
         }
 
         [HttpPut("{id}")]
-
+        //comentario
         public async Task<ActionResult<IActionResult>> Put(int id, PessoaDTO dTO)
         {
             var pessoa = await _context.Pessoas
