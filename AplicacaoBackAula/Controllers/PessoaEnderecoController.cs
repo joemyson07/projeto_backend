@@ -122,7 +122,7 @@ namespace AplicacaoBackAula.Controllers
 
         [HttpPut("{id}")]
         //comentario
-        public async Task<ActionResult<IActionResult>> Put(int id, PessoaDTO dTO)
+        public async Task<ActionResult<ActionResult<Pessoa>>> Put(int id, PessoaDTO dTO)
         {
             var pessoa = await _context.Pessoas
                 .Include(p => p.Enderecos)
@@ -167,6 +167,26 @@ namespace AplicacaoBackAula.Controllers
                     });
                 }
             }
+            return NoContent();
+        }
+        [HttpDelete("{id}")]
+
+        public async Task<ActionResult<Pessoa>> Delete(int id)
+        {
+            var pessoa = await _context.Pessoas
+                .Include(p => p.Enderecos)
+                .FirstOrDefaultAsync(p => p.Idpessoa == id);
+
+            if (pessoa == null)
+            {
+                return NotFound();
+            }
+
+            _context.Pessoas.Remove(pessoa);
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
     }
